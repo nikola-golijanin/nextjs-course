@@ -21,9 +21,7 @@ export default function FilteredEventsPage() {
     month > 12 ||
     month < 1
   ) {
-    return (
-      <h2 className="center">Invalid filter, please adjust your values</h2>
-    );
+    return <NotFoundPage content="Invalid filter, please adjust your values" />;
   }
 
   const filteredEvents = getFilteredEvents({ year, month });
