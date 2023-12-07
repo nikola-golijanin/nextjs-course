@@ -23,14 +23,8 @@ export async function getEventById(id) {
   return allEvents.find((event) => event.id === id);
 }
 
-export async function getEventsIds() {
-  const response = await fetch("http://localhost:8080/events");
-  const data = await response.json();
-  const eventIds = [];
-
-  for (const key in data) {
-    eventIds.push(key);
-  }
-
+export async function getFeatureEventsIds() {
+  const featuredEvents = await getFeaturedEvents();
+  const eventIds = featuredEvents.map((e) => e.id);
   return eventIds;
 }

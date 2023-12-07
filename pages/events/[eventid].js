@@ -1,15 +1,15 @@
 import React from "react";
-import {
-  getEventById,
-  getAllEvents,
-  getEventsIds,
-} from "../../helpers/api-util";
+import { getEventById, getFeatureEventsIds } from "../../helpers/api-util";
 import NotFoundPage from "../404";
 import EventSummary from "../../components/event-detail/event-summary";
 import EventLogistics from "../../components/event-detail/event-logistics";
 import EventContent from "../../components/event-detail/event-content";
 
 export default function EventDetailPage({ event }) {
+  if (!event) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <>
       <EventSummary title={event.title} />
@@ -35,15 +35,16 @@ export async function getStaticProps(context) {
     props: {
       event: event,
     },
+    revalidate: 30,
   };
 }
 
 export async function getStaticPaths() {
-  const ids = await getEventsIds();
+  const ids = await getFeatureEventsIds();
   const paths = ids.map((id) => ({ params: { eventid: id } }));
 
   return {
     paths: paths,
-    fallback: false,
+    fallback: true,
   };
 }
