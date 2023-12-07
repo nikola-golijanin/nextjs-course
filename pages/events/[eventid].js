@@ -4,7 +4,7 @@ import NotFoundPage from "../404";
 import EventSummary from "../../components/event-detail/event-summary";
 import EventLogistics from "../../components/event-detail/event-logistics";
 import EventContent from "../../components/event-detail/event-content";
-
+import Head from "next/head";
 export default function EventDetailPage({ event }) {
   if (!event) {
     return <div>Loading...</div>;
@@ -12,6 +12,10 @@ export default function EventDetailPage({ event }) {
 
   return (
     <>
+      <Head>
+        <title>{event.title}</title>
+        <meta name="description" content={`Event ${event.title}`} />
+      </Head>
       <EventSummary title={event.title} />
       <EventLogistics event={event} />
       <EventContent>

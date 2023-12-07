@@ -1,29 +1,44 @@
 import React from "react";
 import { getFilteredEvents } from "../../helpers/api-util";
-import { useRouter } from "next/router";
 import EventList from "../../components/events/event-list";
 import NotFoundPage from "../404";
 import ResultsTitle from "../../components/events/results-title";
+import Head from "next/head";
 
 export default function FilteredEventsPage({ hasError, events, date }) {
-  const router = useRouter();
-  // const filterData = router.query.slug;
-  // if (!filterData) return <p className="center">Loading...</p>;
+  const formatedDate = new Date(date.year, date.month);
 
-  // const year = +filterData[0];
-  // const month = +filterData[1];
+  const pageHeadData = (
+    <Head>
+      <title>Filtered Events</title>
+      <meta
+        name="description"
+        content={`All events for ${date.month}/${date.year}`}
+      />
+    </Head>
+  );
 
   if (hasError) {
-    return <NotFoundPage content="Invalid filter, please adjust your values" />;
+    return (
+      <>
+        {pageHeadData}
+        <NotFoundPage content="Invalid filter, please adjust your values" />;
+      </>
+    );
   }
 
   if (!events || events.length === 0) {
-    return <NotFoundPage content="No events found" />;
+    return (
+      <>
+        {pageHeadData}
+        <NotFoundPage content="No events found" />;
+      </>
+    );
   }
 
-  const formatedDate = new Date(date.year, date.month);
   return (
     <>
+      {pageHeadData}
       <ResultsTitle date={formatedDate} />
       <EventList events={events} />;
     </>
