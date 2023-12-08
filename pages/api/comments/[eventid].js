@@ -1,3 +1,6 @@
+import fs from "fs";
+import { buildFilePath, extractData } from "../../../helpers/api-util";
+
 export default function commentsHandler(req, res) {
   const eventid = req.query["eventid"];
 
@@ -10,10 +13,17 @@ export default function commentsHandler(req, res) {
     }
 
     const newComment = {
+      id: eventid,
       email,
       name,
       text,
     };
+
+    const filePath = buildFilePath("comments.json");
+    const data = extractData(filePath);
+    data.push(newComment);
+    fs.writeFileSync(filePath, JSON.stringify(data));
+
     res.status(201).json({
       message: "Added new comment",
       comment: newComment,
@@ -21,11 +31,10 @@ export default function commentsHandler(req, res) {
   }
 
   if (req.method === "GET") {
-    const dummy = [
-      { id: "c1", name: "nikola", text: "new comment" },
-      { id: "c12", name: "pero", text: "newaaaaaaaaaa comment" },
-    ];
-    return res.status(200).json({ comments: dummy });
+    const filePath = buildFilePath("comments.json");
+    const data = extractData(filePath);
+    const comments = data.filter((c) => c.id === eventid);
+    return res.status(200).json({ comments: comments });
   }
 }
 

@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import { buildFilePath, extractData } from "../../helpers/api-util";
 
 export default function newsletterHandler(req, res) {
   if (req.method === "POST") {
@@ -9,8 +10,8 @@ export default function newsletterHandler(req, res) {
       res.status(422).json({ message: "Invalid email address" });
       return;
     }
-    const filePath = buildNewsletterPath();
-    const data = extractNewsletter(filePath);
+    const filePath = buildFilePath("newsletter.json");
+    const data = extractData(filePath);
     data.push({ id: new Date().toISOString(), email: email });
     fs.writeFileSync(filePath, JSON.stringify(data));
 
@@ -19,14 +20,4 @@ export default function newsletterHandler(req, res) {
       email: email,
     });
   }
-}
-
-export function buildNewsletterPath() {
-  return path.join(process.cwd(), "data", "newsletter.json");
-}
-
-export function extractNewsletter(filePath) {
-  const fileData = fs.readFileSync(filePath);
-  const data = JSON.parse(fileData);
-  return data;
 }

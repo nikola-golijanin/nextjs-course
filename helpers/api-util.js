@@ -1,3 +1,6 @@
+import fs from "fs";
+import path from "path";
+
 export async function getAllEvents() {
   const response = await fetch("http://localhost:8080/events");
   const data = await response.json();
@@ -41,4 +44,19 @@ export async function getFilteredEvents(dateFilter) {
   });
 
   return filteredEvents;
+}
+
+export function buildFilePath(fileName) {
+  return path.join(process.cwd(), "data", fileName);
+}
+
+export function extractData(filePath) {
+  const fileData = fs.readFileSync(filePath);
+
+  if (fileData.toString().length === 0) {
+    fs.writeFileSync(filePath, JSON.stringify([]));
+    return [];
+  }
+  const data = JSON.parse(fileData);
+  return data;
 }
