@@ -20,7 +20,7 @@ export function NotificationContextProvider({ children }) {
   const context = {
     notification: activeNotification,
     showNotification: showNotificationHandler,
-    hidNotification: hideNotificationHandler,
+    hideNotification: hideNotificationHandler,
   };
 
   return (
