@@ -10,10 +10,14 @@ export default function newsletterHandler(req, res) {
       res.status(422).json({ message: "Invalid email address" });
       return;
     }
-    const filePath = buildFilePath("newsletter.json");
-    const data = extractData(filePath);
-    data.push({ id: new Date().toISOString(), email: email });
-    fs.writeFileSync(filePath, JSON.stringify(data));
+    try {
+      const filePath = buildFilePath("newsletter.json");
+      const data = extractData(filePath);
+      data.push({ id: new Date().toISOString(), email: email });
+      fs.writeFileSync(filePath, JSON.stringify(data));
+    } catch (error) {
+      res.status(500).json(error.message);
+    }
 
     res.status(201).json({
       message: `subscribed to newsletter with email: ${email}`,

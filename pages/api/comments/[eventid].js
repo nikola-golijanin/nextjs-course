@@ -19,22 +19,30 @@ export default function commentsHandler(req, res) {
       text,
     };
 
-    const filePath = buildFilePath("comments.json");
-    const data = extractData(filePath);
-    data.push(newComment);
-    fs.writeFileSync(filePath, JSON.stringify(data));
+    try {
+      const filePath = buildFilePath("comments.json");
+      const data = extractData(filePath);
+      data.push(newComment);
+      fs.writeFileSync(filePath, JSON.stringify(data));
 
-    res.status(201).json({
-      message: "Added new comment",
-      comment: newComment,
-    });
+      res.status(201).json({
+        message: "Added new comment",
+        comment: newComment,
+      });
+    } catch (error) {
+      res.status(500).json(error.message);
+    }
   }
 
   if (req.method === "GET") {
-    const filePath = buildFilePath("comments.json");
-    const data = extractData(filePath);
-    const comments = data.filter((c) => c.id === eventid);
-    return res.status(200).json({ comments: comments });
+    try {
+      const filePath = buildFilePath("comments.json");
+      const data = extractData(filePath);
+      const comments = data.filter((c) => c.id === eventid);
+      return res.status(200).json({ comments: comments });
+    } catch (error) {
+      res.status(500).json({ comments: [] });
+    }
   }
 }
 
